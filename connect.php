@@ -1,3 +1,3 @@
 <?php
 //$conn=mysqli_connect("localhost","root","","taxi");
-$conn=mysqli_connect("localhost","root","","combined");
+$conn=mysqli_connect("localhost","root","Normal@2018","combined");
