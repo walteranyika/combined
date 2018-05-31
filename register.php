@@ -1,12 +1,14 @@
 <?php
-if (isset($_POST["phone"]))
-{
     require "connect.php";
     include "functions.php";
-    extract($_POST);
+    $post = json_decode(file_get_contents("php://input"), true);
+   // extract($_POST);
     $code= rand(1000,9999);
     $sql="";
-    if ($type=="client")
+    $names=$post->names;
+    $phone=$post->phone;
+
+    if ($post->type=="client")
     {
         $sql="insert into clients(names, phone, code) values ('$names','$phone','$code')";
     }else
@@ -16,8 +18,8 @@ if (isset($_POST["phone"]))
     $result = mysqli_query($conn, $sql);// or die(mysqli_errno($conn));
     if($result)
     {
-      echo json_encode(array("status"=>"success"));
-      sendSMS($phone,$code);
+        sendSMS($phone,$code);
+        echo json_encode(array("status"=>"success"));
     }
     else
     {
@@ -31,13 +33,10 @@ if (isset($_POST["phone"]))
             $sql="update riders set status='unverified', code='$code' WHERE phone='$phone'";
         }
         mysqli_query($conn, $sql);// or die(mysqli_errno($conn));
-        echo json_encode(array("status"=>"success"));
         sendSMS($phone,$code);
+        echo json_encode(array("status"=>"success"));
     }
-}
-else
-{
-    echo json_encode(array("status"=>"No data sent"));
-}
+
+
 
 
